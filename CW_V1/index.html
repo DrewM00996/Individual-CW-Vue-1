@@ -34,9 +34,14 @@
                             <button class="btn btn-light" type="submit">Search</button>
                         </div>
                         <!-- Checkout button displays cart item count, toggles checkout and product sections -->
-                        <button class="btn btn-primary checkout-btn" v-on:click="showCheckout">
+                        <button class="btn btn-primary checkout-btn" v-on:click="showCheckout" v-if="checkCart">
                             <!-- 'cartItemCount' display cart count -->
                             {{ cartItemCount }}
+                            <span class="fas fa-cart-plus"></span> Checkout
+                        </button>
+                        <!-- Display disabled button when the cart is empty -->
+                        <button disabled="disabled" class="btn btn-primary checkout-btn" v-else>
+                            <!-- add the cart icon -->
                             <span class="fas fa-cart-plus"></span> Checkout
                         </button>
                     </div>
@@ -201,7 +206,9 @@
                 // Returns current value of the cart 
                 cartItemCount() { return this.cart.length || ''; },
                 // Checks if the available spaces is greater than cart count
-                canAddToCart() { return this.product.availableSpace > this.cartItemCount; }
+                canAddToCart() { return this.product.availableSpace > this.cartItemCount; },
+                // Checks if the cart count is empty, if empty disables the checkout button on navbar
+                checkCart() { return this.cartItemCount > 0; }
 
             }
         });
