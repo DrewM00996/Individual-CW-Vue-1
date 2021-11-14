@@ -1,0 +1,41 @@
+/* Fonts Import */
+@import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
+
+/* CSS Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+}
+
+/* General Styling */
+
+body {
+  font-family: "Rubik", sans-serif;
+  font-weight: 500;
+  background-color: ghostwhite;
+}
+
+/* Navbar Section */
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.checkout-btn {
+  margin-left: 20px;
+}
+
+/* Products Section */
+
+main {
+  margin-top: 40px;
+}
