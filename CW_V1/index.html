@@ -33,8 +33,10 @@
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                             <button class="btn btn-light" type="submit">Search</button>
                         </div>
-                        <!-- Checkout Button -->
-                        <button class="btn btn-primary checkout-btn">
+                        <!-- Checkout button displays cart item count, toggles checkout and product sections -->
+                        <button class="btn btn-primary checkout-btn" v-on:click="showCheckout">
+                            <!-- 'cartItemCount' display cart count -->
+                            {{ cartItemCount }}
                             <span class="fas fa-cart-plus"></span> Checkout
                         </button>
                     </div>
@@ -46,17 +48,117 @@
         <!-- Products & Checkout Sections -->
         <main>
             <div class="container">
-                <div class="card" style="width: 18rem;">
-                    <img v-bind:src="product.img" class="card-img-top" alt="image">
-                    <div class="card-body">
-                        <h5 class="card-title" v-text="product.title"></h5>
-                        <h5 class="card-title" v-text="product.location"></h5>
-                        <p>Available Space: {{ product.availableSpace}}</p>
-                        <p>Price: £ {{ product.price}}</p>
+                <!-- Products section -->
+                <!-- if showProduct is true, products section is displayed -->
+                <div class="products" v-if="showProduct">
+                    <div class="page-container-products">
+                        <!-- Filter Section -->
+                        <aside class=" filter-section">
+                            <h4>FILTER</h4>
+                            <div>
+                                <h5>SORT BY</h5>
+                                <div>
+                                    <p>
+                                        <input type="radio" name="sort" id="subject" value="subject">
+                                        <label for="subject">Subject</label>
+                                    </p>
+                                    <p>
+                                        <input type="radio" name="sort" id="location" value="location">
+                                        <label for="location">Location</label>
+                                    </p>
+                                    <p>
+                                        <input type="radio" name="sort" id="price" value="price">
+                                        <label for="subject">Price</label>
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h5>ORDER BY</h5>
+                                <div>
+                                    <p>
+                                        <input type="radio" name="order" id="ascending" value="ascending">
+                                        <label for="ascending">Ascending</label>
+
+                                    </p>
+                                    <p>
+                                        <input type="radio" name="order" id="descending" value="descending">
+                                        <label for="descending">Desending</label>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </aside>
+                        <!-- Product Listings -->
+                        <section class="products-section">
+                            <div class="card" style="width: 18rem;">
+                                <img v-bind:src="product.img" class="card-img-top" alt="imaage">
+                                <div class="card-body">
+                                    <h5 v-text="product.title"></h5>
+                                    <p v-text="product.location"></p>
+                                    <p>Available Space: {{ product.availableSpace}}</p>
+                                    <p>Price: £ {{ product.price}}</p>
+                                    <!-- Add to cart buttons enabled/disabled according to canAddToCart -->
+                                    <button class="btn btn-dark" v-on:click="addToCart" v-if="canAddToCart">
+                                        Add to cart
+                                    </button>
+                                    <button disabled="disabled" class="btn btn-dark" v-else>
+                                        Add to cart
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
-            </div>
+                <!-- Products section end -->
 
+                <!-- Checkout section -->
+                <!-- if showProduct is false, checkout section is displayed -->
+                <div class="checkout" v-else>
+                    <div class="checkout-header">
+                        <h2>Cart <span class="cart-count">(1) items</span></h2>
+                        <!-- Button to go back to products page -->
+                        <button class="btn btn-secondary" v-on:click="showCheckout"><i class="fas fa-chevron-left"></i>
+                            Back to Products</button>
+                    </div>
+                    <div class="page-container-checkout">
+                        <!-- Cart Section -->
+                        <section class="cart-section">
+                            <!-- Items in cart are displayed -->
+                            <div class="card mb-3" style="max-width: 540px;">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img v-bind:src="product.img" class="img-fluid rounded-start" alt="product">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 v-text="product.title"></h5>
+                                            <p v-text="product.location"></p>
+                                            <p>Price: £ {{ product.price}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Checkout Section -->
+                        <section class="checkout-section">
+                            <div class="checkout-form">
+                                <!-- Div to display alerts from the form submission -->
+                                <div id="message-section"></div>
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="nameInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" class="form-control" id="phoneInput">
+                                </div>
+                                <button type="submit" class="btn btn-primary confirm-checkout-btn">Checkout</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!-- Checkout section end -->
+            </div>
         </main>
         <!-- Products & Checkout Sections End-->
     </div>
@@ -82,11 +184,26 @@
                     price: 25,
                     availableSpace: 5,
                     img: "/assests/bookclub.jpg"
-
-                }
+                },
+                // To store products
+                cart: [],
+                // Property to switch between products and checkout sections
+                showProduct: true
             },
             // Object contains methods used by the app components
-            methods: {}
+            methods: {
+                // Adding products into the cart
+                addToCart() { this.cart.push(this.product.id); },
+                // Checks the showProduct value according to the state and return a value of true/false
+                showCheckout() { this.showProduct = this.showProduct ? false : true }
+            },
+            computed: {
+                // Returns current value of the cart 
+                cartItemCount() { return this.cart.length || ''; },
+                // Checks if the available spaces is greater than cart count
+                canAddToCart() { return this.product.availableSpace > this.cartItemCount; }
+
+            }
         });
     </script>
 </body>
