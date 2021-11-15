@@ -101,7 +101,7 @@
                                 <div class="card-body">
                                     <h5 v-text="product.title"></h5>
                                     <p v-text="product.location"></p>
-                                    <p>Available Space: {{ product.availableSpace}}</p>
+                                    <p>Available Space: {{product.availableSpace - cartCount(product.id) }}</p>
                                     <p>Price: £ {{ product.price}}</p>
                                     <div class="rating-container">
                                         <!-- Display the shaded stars according to product rating -->
