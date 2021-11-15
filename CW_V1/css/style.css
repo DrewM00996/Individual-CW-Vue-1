@@ -61,6 +61,10 @@ main {
   margin-right: 20px;
 }
 
+.rating-container {
+  margin-bottom: 5px;
+}
+
 /* Checkout Section */
 
 .page-container-checkout {

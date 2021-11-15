@@ -102,6 +102,12 @@
                                     <p v-text="product.location"></p>
                                     <p>Available Space: {{ product.availableSpace}}</p>
                                     <p>Price: £ {{ product.price}}</p>
+                                    <div class="rating-container">
+                                        <!-- Display the shaded stars according to product rating -->
+                                        <span v-for='n in product.rating'><i class="fas fa-star"></i></span>
+                                        <!-- Outputs the solid stars subtracted according to product rating out of 5 -->
+                                        <span v-for='n in 5-product.rating'><i class="far fa-star"></i></span>
+                                    </div>
                                     <!-- Add to cart buttons enabled/disabled according to canAddToCart -->
                                     <button class="btn btn-dark" v-on:click="addToCart" v-if="canAddToCart">
                                         Add to cart
@@ -109,6 +115,15 @@
                                     <button disabled="disabled" class="btn btn-dark" v-else>
                                         Add to cart
                                     </button>
+                                    <!-- Inventory alerts -->
+                                    <!-- If the spaces/stock equals the cart count for that product display span -->
+                                    <span v-if="product.availableSpace === cartItemCount">All Out!</span>
+                                    <!-- Display the number of spaces/stock left -->
+                                    <span v-else-if="product.availableSpace - cartItemCount < 5">
+                                        Only {{ product.availableSpace - cartItemCount }} left!
+                                    </span>
+                                    <!-- If the stock/spaces are fully available display buy now -->
+                                    <span v-else>Buy now!</span>
                                 </div>
                             </div>
                         </section>
@@ -188,7 +203,8 @@
                     location: "London",
                     price: 25,
                     availableSpace: 5,
-                    img: "/assests/bookclub.jpg"
+                    img: "/assests/bookclub.jpg",
+                    rating: 3
                 },
                 // To store products
                 cart: [],
