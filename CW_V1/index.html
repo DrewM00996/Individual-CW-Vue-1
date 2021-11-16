@@ -32,8 +32,8 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <!-- Search Products -->
                         <div class="d-flex ms-auto">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-light" type="submit">Search</button>
+                            <input class="form-control me-2" type="search" placeholder="Search" v-model="search">
+                            <!-- <button class="btn btn-light" type="submit">Search</button> -->
                         </div>
                         <button class="btn btn-primary checkout-btn" v-on:click="showCheckout" v-if="checkCart">
                             <!-- 'cartItemCount' display cart count -->
@@ -96,7 +96,7 @@
                         </aside>
                         <!-- Product Listings -->
                         <section class="products-section">
-                            <div class="card" style="width: 18rem;" v-for="product in products">
+                            <div class="card" style="width: 18rem;" v-for="product in filteredSearch">
                                 <img v-bind:src="product.img" class="card-img-top" alt="image">
                                 <div class="card-body">
                                     <h5 v-text="product.title"></h5>
@@ -205,6 +205,8 @@
                 cart: [],
                 // Property to switch between products and checkout sections
                 showProduct: true,
+                // Search term binded using v-model in the search box
+                search: ''
             },
             // Object contains methods used by the app components
             methods: {
@@ -228,13 +230,23 @@
 
                     }
                     return count;
-                }
+                },
             },
             computed: {
                 // Returns current value of the cart 
                 cartItemCount() { return this.cart.length || ''; },
                 // Checks if the cart count is empty, if empty disables the checkout button on navbar
-                checkCart() { return this.cart.length > 0; }
+                checkCart() { return this.cart.length > 0; },
+                // Searches the products array according to the search property
+                filteredSearch() {
+                    // Covert search term to lowercase
+                    let searchTerm = this.search.toLowerCase();
+                    // Filter thorugh the current products and returns an updated array
+                    return this.products.filter((product) => {
+                        // Checks if each product contains the title or location in the search term 
+                        return product.title.toLowerCase().match(searchTerm) || product.location.toLowerCase().match(searchTerm);
+                    });
+                }
 
             }
         });
