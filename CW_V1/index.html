@@ -65,15 +65,18 @@
                                 <h5>SORT BY</h5>
                                 <div>
                                     <p>
-                                        <input type="radio" name="sort" id="subject" value="subject">
-                                        <label for="subject">Subject</label>
+                                        <input type="radio" name="sort" id="subject" value="subject"
+                                            v-on:click="sortBy('title')">
+                                        <label for=" subject">Subject</label>
                                     </p>
                                     <p>
-                                        <input type="radio" name="sort" id="location" value="location">
-                                        <label for="location">Location</label>
+                                        <input type="radio" name="sort" id="location" value="location"
+                                            v-on:click="sortBy('location')">
+                                        <label for=" location">Location</label>
                                     </p>
                                     <p>
-                                        <input type="radio" name="sort" id="price" value="price">
+                                        <input type="radio" name="sort" id="price" value="price"
+                                            v-on:click="sortBy('price')">
                                         <label for="subject">Price</label>
                                     </p>
                                 </div>
@@ -83,12 +86,12 @@
                                 <div>
                                     <p>
                                         <input type="radio" name="order" id="ascending" value="ascending">
-                                        <label for="ascending">Ascending</label>
+                                        <label for="ascending">Low to High</label>
 
                                     </p>
                                     <p>
                                         <input type="radio" name="order" id="descending" value="descending">
-                                        <label for="descending">Desending</label>
+                                        <label for="descending">High to Low</label>
                                     </p>
 
                                 </div>
@@ -214,7 +217,6 @@
                 addToCart(product) { this.cart.push(product.id); },
                 // Checks the showProduct value according to the state and return a value of true/false
                 showCheckout() {
-                    console.log(this.showProduct);
                     this.showProduct = this.showProduct ? false : true;
                 },
                 // Checks if the avialable space is greater than cart count for a specific product id
@@ -231,6 +233,20 @@
                     }
                     return count;
                 },
+                // Sorts the products by attributes and order
+                sortBy(attribute) {
+                    // Ascending 
+                    if (document.getElementById('ascending').checked) {
+                        // sorts the products array by checking a and b values 
+                        // if true return -1 and false return 1 to switch order
+                        this.products.sort((a, b) => a[attribute] < b[attribute] ? -1 : 1);
+                        // Descending
+                    } else if (document.getElementById('descending').checked) {
+                        this.products.sort((a, b) => a[attribute] > b[attribute] ? -1 : 1);
+                    } else {
+                        return
+                    }
+                }
             },
             computed: {
                 // Returns current value of the cart 
