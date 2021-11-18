@@ -149,16 +149,19 @@
                         <!-- Cart Section -->
                         <section class="cart-section">
                             <!-- Items in cart are displayed -->
-                            <div class="card mb-3" style="max-width: 540px;">
+                            <div class="card mb-3" style="max-width: 540px;" v-for="item in items">
                                 <div class="row g-0">
                                     <div class="col-md-4">
-                                        <img src="/assests/bookclub.jpg" class="img-fluid rounded-start" alt="product">
+                                        <img v-bind:src="item.img" class="img-fluid rounded-start" alt="product">
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body">
-                                            <h5>Book Club</h5>
-                                            <p>London</p>
-                                            <p>Price: £ 50</p>
+                                            <input type="hidden" v-text="item.id">
+                                            <h5 v-text="item.title">Book Club</h5>
+                                            <p>Price: £ {{ item.price }}</p>
+                                            <button class="btn btn-dark" v-on:click="deleteProduct(item.id)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -209,12 +212,17 @@
                 // Property to switch between products and checkout sections
                 showProduct: true,
                 // Search term binded using v-model in the search box
-                search: ''
+                search: '',
+                // 
+                items: []
             },
             // Object contains methods used by the app components
             methods: {
                 // Adding products into the cart depending on the product id
-                addToCart(product) { this.cart.push(product.id); },
+                addToCart(product) {
+                    this.cart.push(product.id);
+                    this.items.push(product);
+                },
                 // Checks the showProduct value according to the state and return a value of true/false
                 showCheckout() {
                     this.showProduct = this.showProduct ? false : true;
@@ -245,6 +253,19 @@
                         this.products.sort((a, b) => a[attribute] > b[attribute] ? -1 : 1);
                     } else {
                         return
+                    }
+                },
+                deleteProduct(id) {
+                    // Finding the index of product on cart and splicing it
+                    let index = this.cart.indexOf(id);
+                    this.cart.splice(index, 1);
+
+                    // Finding the index of the product on the items and splicing it
+                    for (let i = 0; i < this.items.length; i++) {
+                        if (this.items[i].id === id) {
+                            this.items.splice(i, 1);
+                            break;
+                        }
                     }
                 }
             },
