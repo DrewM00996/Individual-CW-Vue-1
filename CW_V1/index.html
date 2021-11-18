@@ -174,13 +174,22 @@
                                 <div id="message-section"></div>
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="nameInput">
+                                    <input type="text" class="form-control" id="nameInput" v-on:keyup="validateInput"
+                                        v-on:focus="validateInput">
+                                    <div id="nameMsg" class="form-text"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control" id="phoneInput">
+                                    <input type="text" class="form-control" id="phoneInput" v-on:blur="validateInput"
+                                        v-on:keyup="validateInput">
+                                    <div id="phoneMsg" class="form-text"></div>
                                 </div>
-                                <button type="submit" class="btn btn-primary confirm-checkout-btn">Checkout</button>
+                                <button type="submit" class=" btn btn-primary confirm-checkout-btn" id="checkoutbtn"
+                                    v-if="name && phone" v-on:click="processOrder">Checkout
+                                </button>
+                                <button type="submit" class=" disabled btn btn-primary confirm-checkout-btn"
+                                    id="checkoutbtn" v-else>Checkout
+                                </button>
                             </div>
                         </section>
                     </div>
@@ -213,8 +222,11 @@
                 showProduct: true,
                 // Search term binded using v-model in the search box
                 search: '',
-                // 
-                items: []
+                // items in the shopping bag
+                items: [],
+                // checking values during form validation
+                phone: false,
+                name: false
             },
             // Object contains methods used by the app components
             methods: {
@@ -267,6 +279,35 @@
                             break;
                         }
                     }
+
+                },
+                validateInput() {
+                    const regexName = /^[a-zA-Z ]*$/;
+                    const regexPhone = /^[0-9]$/;
+
+                    if (event.target.id === 'nameInput') {
+                        if (regexName.test(event.target.value)) {
+                            this.name = true;
+                            document.getElementById('nameMsg').innerHTML = '';
+                        } else {
+                            this.name = false;
+                            document.getElementById('nameMsg').innerHTML = `Error! name should only contain letters.`;
+                        }
+                    } else if (event.target.id === 'phoneInput') {
+                        if (regexPhone.test(event.target.value)) {
+                            this.phone = true
+                            document.getElementById('phoneMsg').innerHTML = '';
+                        } else {
+                            this.phone = false;
+                            document.getElementById('phoneMsg').innerHTML = `Error! phone should only contain number values.`;
+                        }
+                    }
+
+                }, // end of method
+                processOrder() {
+                    this.cart = [];
+                    this.items = [];
+                    alert("Order Submitted");
                 }
             },
             computed: {
