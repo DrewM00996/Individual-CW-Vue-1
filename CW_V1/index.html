@@ -283,7 +283,7 @@
                 },
                 validateInput() {
                     const regexName = /^[a-zA-Z ]*$/;
-                    const regexPhone = /^[0-9]$/;
+                    const regexPhone = /^[0-9]*$/;
 
                     if (event.target.id === 'nameInput') {
                         if (regexName.test(event.target.value)) {
